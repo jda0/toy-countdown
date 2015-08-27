@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<script>
+var builder;
+
+builder = function(t, n) {
+  var makeP, ops;
+  this.done = false;
+  makeP = (function(_this) {
+    return function(p) {
+      var i, _i, _len;
+      if (p.length < 6) {
+        for (_i = 0, _len = n.length; _i < _len; _i++) {
+          i = n[_i];
+          if (p.indexOf(i) === -1) {
+            makeP(p.concat(i));
+          }
+        }
+      } else {
+        ops(p);
+      }
+    };
+  })(this);
+  ops = (function(_this) {
+    return function(p) {
+      var a, b, op, _i, _len, _ref;
+      if (!_this.done) {
+        if (p.length > 1) {
+          _ref = ['+', '-', '*', '/'];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            op = _ref[_i];
+            b = p[p.length - 1];
+            a = p[p.length - 2];
+            switch (op) {
+              case '+':
+                ops(p.slice(0, p.length - 3).concat([a + b]));
+                break;
+              case '-':
+                ops(p.slice(0, p.length - 3).concat([a - b]));
+                break;
+              case '*':
+                ops(p.slice(0, p.length - 3).concat([a * b]));
+                break;
+              case '/':
+                if (a / b === (a / b) | 0) {
+                  ops(p.slice(0, p.length - 3).concat([a / b]));
+                }
+            }
+          }
+        } else if (p === t) {
+          _this.done = true;
+        }
+      }
+    };
+  })(this);
+  makeP([]);
+  return this.done;
+};
+console.log(builder(125, [75, 25, 10, 5, 4, 2]));
+</script>
+</body>
+</html>
